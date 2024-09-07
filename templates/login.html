@@ -1,167 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospital Management System - Login</title>
-    <!-- <link rel="stylesheet" href="login.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet"> -->
-    <style>
-        body {
-    font-family: 'Roboto', sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #3498db, #8e44ad);
-    overflow: hidden;
-}
-
-.container {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-    padding: 40px;
-    width: 100%;
-    max-width: 400px;
-    opacity: 0;
-    transform: translateY(-50px);
-    animation: slideDown 1s ease forwards, fadeIn 1s ease forwards;
-    position: relative;
-    z-index: 2;
-    backdrop-filter: blur(10px);
-}
-
-@keyframes slideDown {
-    to {
-        transform: translateY(0);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Management Admin - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Custom gradient background */
+    .gradient-background {
+      background: linear-gradient(135deg, #3498db, #8e44ad);
     }
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
+    .chart-container {
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      border-radius: 0.75rem;
     }
-}
-
-.login-box h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-    font-size: 24px;
-    position: relative;
-}
-
-.login-box h1:after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 3px;
-    background-color: #3498db;
-    margin: 10px auto;
-    border-radius: 5px;
-    transition: width 0.5s ease;
-}
-
-.login-box h1:hover:after {
-    width: 80px;
-}
-
-.input-group {
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #34495e;
-    font-weight: 500;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #bdc3c7;
-    border-radius: 30px;
-    font-size: 16px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.input-group input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.5);
-}
-
-.login-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.login-btn:hover {
-    background-color: #2980b9;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-@media (max-width: 480px) {
-    .container {
-        width: 90%;
-        padding: 20px;
+    .action-button {
+      background: linear-gradient(135deg, #ff6f61, #d54f43);
     }
-}
-
-/* Background Animation */
-body:before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    animation: rotateBG 10s linear infinite;
-    z-index: 1;
-}
-
-@keyframes rotateBG {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-    </style>
+  </style>
 </head>
-<body>
-    <div class="container">
-        <div class="login-box">
-            <h1>Hospital Management System</h1>
-            <form action="/login" method="POST">
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit" class="login-btn">Sign In</button>
-            </form>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between">
+        <!-- Hospital Logo -->
+        <div class="flex space-x-4">
+          <div>
+            <a href="/" class="flex items-center py-5 px-2 text-white">
+              <img src="/static/hospi_logo.png" alt="Hospital Logo" class="h-14 w-14 mr-2"> <!-- Increased logo size -->
+              <span class="font-bold text-xl">Admin Dashboard</span>
+            </a>
+          </div>
         </div>
+        <!-- Navigation Links -->
+        <div class="hidden md:flex items-center space-x-1">
+          <a href="/patient" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Patients</a>
+          <a href="/doctor" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Doctors</a>
+          <a href="/billing" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Billing</a>
+          <a href="/appointment" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Appointments</a>
+          <a href="/logout" class="py-5 px-3 text-white bg-red-600 hover:bg-red-700 transition duration-300">Log Out</a>
+        </div>
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden flex items-center">
+          <button class="mobile-menu-button text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden md:hidden">
+      <a href="/patient" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Patients</a>
+      <a href="/doctor" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Doctors</a>
+      <a href="/billing" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Billing</a>
+      <a href="/appointment" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Appointments</a>
+      <a href="/logout" class="block py-2 px-4 text-sm text-white bg-red-600 hover:bg-red-700">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- Content Section -->
+  <div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h1 class="text-3xl text-gray-800 font-bold text-center">Admin Dashboard</h1>
+      <p class="text-gray-600 text-center mb-6">Manage hospital operations efficiently</p>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Patients</h2>
+          <p class="text-xl">1,234 Active</p>
+        </div>
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Doctors</h2>
+          <p class="text-xl">150 On Duty</p>
+        </div>
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Appointments</h2>
+          <p class="text-xl">350 Today</p>
+        </div>
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Billing</h2>
+          <p class="text-xl">$45,000 Due</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="/patient" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Patients</a>
+        <a href="/doctor" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Doctors</a>
+        <a href="/billing" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Billing</a>
+        <a href="/appointment" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">View Appointments</a>
+      </div>
+
+      <!-- Charts -->
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="chart-container p-4 h-80"> <!-- Gradient background for chart container -->
+          <h2 class="text-xl font-bold mb-4">Appointments Chart</h2>
+          <canvas id="appointmentsChart" width="300" height="150"></canvas>
+        </div>
+        <div class="chart-container p-4 h-80"> <!-- Gradient background for chart container -->
+          <h2 class="text-xl font-bold mb-4">Billing Chart</h2>
+          <canvas id="billingChart" width="300" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white text-center py-4 mt-10">
+    <p>&copy; 2024 Hospital Management System. Admin Dashboard.</p>
+  </footer>
+
+  <!-- JavaScript for Chart.js -->
+  <script>
+    function createGradient(ctx, colors) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+      colors.forEach((color, index) => {
+        gradient.addColorStop(index / (colors.length - 1), color);
+      });
+      return gradient;
+    }
+
+    const appointmentsCtx = document.getElementById('appointmentsChart').getContext('2d');
+    const billingCtx = document.getElementById('billingChart').getContext('2d');
+
+    const appointmentsGradient = createGradient(appointmentsCtx, ['#4CAF50', '#81C784']);
+    const billingGradient = createGradient(billingCtx, ['#42A5F5', '#64B5F6']);
+
+    const appointmentsChart = new Chart(appointmentsCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Appointments',
+          data: [30, 45, 35, 50, 40, 55],
+          backgroundColor: appointmentsGradient,
+          borderColor: 'rgba(34, 193, 195, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    const billingChart = new Chart(billingCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Billing ($)',
+          data: [2000, 3000, 2500, 3500, 3000, 4000],
+          backgroundColor: billingGradient,
+          borderColor: 'rgba(33, 150, 243, 1)',
+          borderWidth: 2,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+
+  <!-- JavaScript for Mobile Menu -->
+  <script>
+    document.querySelector('.mobile-menu-button').addEventListener('click', () => {
+      document.querySelector('.mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+
 </body>
 </html>
