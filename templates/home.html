@@ -1,1 +1,106 @@
-<!-- landing page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Management Admin - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex justify-between">
+        <!-- Hospital Logo -->
+        <div class="flex space-x-4">
+          <div>
+            <a href="/" class="flex items-center py-5 px-2 text-white">
+              <img src="/static/logo.png" alt="Hospital Logo" class="h-10 w-10 mr-2">
+              <span class="font-bold text-xl">Admin Dashboard</span>
+            </a>
+          </div>
+        </div>
+        <!-- Navigation Links -->
+        <div class="hidden md:flex items-center space-x-1">
+          <a href="/patient" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Patients</a>
+          <a href="/doctor" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Doctors</a>
+          <a href="/billing" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Billing</a>
+          <a href="/appointment" class="py-5 px-3 text-white hover:bg-blue-700 transition duration-300">Appointments</a>
+          <a href="/logout" class="py-5 px-3 text-white bg-red-600 hover:bg-red-700 transition duration-300">Log Out</a>
+        </div>
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden flex items-center">
+          <button class="mobile-menu-button text-white focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu hidden md:hidden">
+      <a href="/patient" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Patients</a>
+      <a href="/doctor" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Doctors</a>
+      <a href="/billing" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Billing</a>
+      <a href="/appointment" class="block py-2 px-4 text-sm text-white hover:bg-blue-700">Appointments</a>
+      <a href="/logout" class="block py-2 px-4 text-sm text-white bg-red-600 hover:bg-red-700">Log Out</a>
+    </div>
+  </nav>
+
+  <!-- Content Section -->
+  <div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h1 class="text-3xl text-gray-800 font-bold text-center">Admin Dashboard</h1>
+      <p class="text-gray-600 text-center mb-6">Manage hospital operations efficiently</p>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Patients</h2>
+          <p class="text-xl">1,234 Active</p>
+        </div>
+        <div class="bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Doctors</h2>
+          <p class="text-xl">150 On Duty</p>
+        </div>
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Appointments</h2>
+          <p class="text-xl">350 Today</p>
+        </div>
+        <div class="bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg shadow-lg p-6">
+          <h2 class="text-2xl font-bold">Billing</h2>
+          <p class="text-xl">$45,000 Due</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="/patient" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Patients</a>
+        <a href="/doctor" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Doctors</a>
+        <a href="/billing" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Billing</a>
+        <a href="/appointment" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">View Appointments</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white text-center py-4 mt-10">
+    <p>&copy; 2024 Hospital Management System. Admin Dashboard.</p>
+  </footer>
+
+  <script>
+    // Toggle mobile menu visibility
+    const btn = document.querySelector('.mobile-menu-button');
+    const menu = document.querySelector('.mobile-menu');
+
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+
+</body>
+</html>
