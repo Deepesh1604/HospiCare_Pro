@@ -8,7 +8,6 @@ app.secret_key = "your_secret_key"  # Change this to a secure random key in prod
 HARDCODED_EMAIL = "deepesh55@gmail.com"
 HARDCODED_PASSWORD_HASH = generate_password_hash("deep55")  # Hash of the hardcoded password
 
-# Redirect to login page initially
 @app.route('/')
 def index():
     return redirect(url_for('login'))
