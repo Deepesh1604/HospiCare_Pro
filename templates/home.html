@@ -6,6 +6,19 @@
   <title>Hospital Management Admin - Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Custom gradient background */
+    .gradient-background {
+      background: linear-gradient(135deg, #3498db, #8e44ad);
+    }
+    .chart-container {
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      border-radius: 0.75rem;
+    }
+    .action-button {
+      background: linear-gradient(135deg, #ff6f61, #d54f43);
+    }
+  </style>
 </head>
 <body class="bg-gray-100">
 
@@ -60,19 +73,19 @@
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-gradient-to-r from-green-400 to-green-500 text-white rounded-lg shadow-lg p-6">
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
           <h2 class="text-2xl font-bold">Patients</h2>
           <p class="text-xl">1,234 Active</p>
         </div>
-        <div class="bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-lg shadow-lg p-6">
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
           <h2 class="text-2xl font-bold">Doctors</h2>
           <p class="text-xl">150 On Duty</p>
         </div>
-        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 text-white rounded-lg shadow-lg p-6">
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
           <h2 class="text-2xl font-bold">Appointments</h2>
           <p class="text-xl">350 Today</p>
         </div>
-        <div class="bg-gradient-to-r from-red-400 to-red-500 text-white rounded-lg shadow-lg p-6">
+        <div class="gradient-background text-white rounded-lg shadow-lg p-6">
           <h2 class="text-2xl font-bold">Billing</h2>
           <p class="text-xl">$45,000 Due</p>
         </div>
@@ -80,19 +93,19 @@
 
       <!-- Action Buttons -->
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="/patient" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Patients</a>
-        <a href="/doctor" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Doctors</a>
-        <a href="/billing" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Billing</a>
-        <a href="/appointment" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">View Appointments</a>
+        <a href="/patient" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Patients</a>
+        <a href="/doctor" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Doctors</a>
+        <a href="/billing" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">Manage Billing</a>
+        <a href="/appointment" class="action-button hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 text-center">View Appointments</a>
       </div>
 
       <!-- Charts -->
       <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-lg shadow-lg p-4 h-80"> <!-- Fixed height for chart container -->
+        <div class="chart-container p-4 h-80"> <!-- Gradient background for chart container -->
           <h2 class="text-xl font-bold mb-4">Appointments Chart</h2>
           <canvas id="appointmentsChart" width="300" height="150"></canvas>
         </div>
-        <div class="bg-white rounded-lg shadow-lg p-4 h-80"> <!-- Fixed height for chart container -->
+        <div class="chart-container p-4 h-80"> <!-- Gradient background for chart container -->
           <h2 class="text-xl font-bold mb-4">Billing Chart</h2>
           <canvas id="billingChart" width="300" height="150"></canvas>
         </div>
@@ -150,9 +163,9 @@
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
         datasets: [{
           label: 'Billing ($)',
-          data: [2000, 2400, 2800, 3200, 3600, 4000],
+          data: [2000, 3000, 2500, 3500, 3000, 4000],
           backgroundColor: billingGradient,
-          borderColor: 'rgba(255, 99, 132, 1)',
+          borderColor: 'rgba(33, 150, 243, 1)',
           borderWidth: 2,
           fill: true
         }]
