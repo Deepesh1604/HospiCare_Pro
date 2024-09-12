@@ -59,11 +59,10 @@ def patients():
         flash('Please log in to access this page', 'error')
         return redirect(url_for('login'))
 
-    # Fetch all patients from the database
     patients = mongo.db.patients.find()
     return render_template('patients.html', patients=patients)
 
-# Updated add_patient route
+# Updated add_patient route (unchanged)
 @app.route('/add_patient', methods=['GET', 'POST'])
 def add_patient():
     if 'user_id' not in session:
@@ -107,7 +106,7 @@ def add_patient():
 
     return render_template('add_patient.html')
 
-# Updated edit_patient route
+# Updated edit_patient route (unchanged)
 @app.route('/edit_patient/<id>', methods=['GET', 'POST'])
 def edit_patient(id):
     if 'user_id' not in session:
@@ -162,6 +161,153 @@ def delete_patient(id):
     mongo.db.patients.delete_one({'_id': ObjectId(id)})
     flash('Patient deleted successfully!', 'success')
     return redirect(url_for('patients'))
+
+# New routes for doctor management
+
+@app.route('/doctor')
+def doctor():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    doctor = mongo.db.doctor.find()
+    return render_template('doctor.html', doctor=doctor)
+
+@app.route('/add_doctor', methods=['GET', 'POST'])
+def add_doctor():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        doctor = {
+            'name': request.form.get('name'),
+            'specialization': request.form.get('specialization'),
+            'email': request.form.get('email'),
+            'phone': request.form.get('phone'),
+            'address': request.form.get('address'),
+            'license_number': request.form.get('license_number'),
+            'joining_date': request.form.get('joining_date'),
+            'qualifications': request.form.get('qualifications'),
+            'created_at': datetime.now(),
+            'updated_at': datetime.now()
+        }
+        mongo.db.doctor.insert_one(doctor)
+        flash('Doctor added successfully!', 'success')
+        return redirect(url_for('doctor'))
+
+    return render_template('add_doctor.html')
+
+@app.route('/edit_doctor/<id>', methods=['GET', 'POST'])
+def edit_doctor(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    doctor = mongo.db.doctor.find_one({'_id': ObjectId(id)})
+
+    if request.method == 'POST':
+        updated_doctor = {
+            'name': request.form.get('name'),
+            'specialization': request.form.get('specialization'),
+            'email': request.form.get('email'),
+            'phone': request.form.get('phone'),
+            'address': request.form.get('address'),
+            'license_number': request.form.get('license_number'),
+            'joining_date': request.form.get('joining_date'),
+            'qualifications': request.form.get('qualifications'),
+            'updated_at': datetime.now()
+        }
+        mongo.db.doctor.update_one({'_id': ObjectId(id)}, {'$set': updated_doctor})
+        flash('Doctor updated successfully!', 'success')
+        return redirect(url_for('doctor'))
+
+    return render_template('edit_doctor.html', doctor=doctor)
+
+@app.route('/delete_doctor/<id>')
+def delete_doctor(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    mongo.db.doctor.delete_one({'_id': ObjectId(id)})
+    flash('Doctor deleted successfully!', 'success')
+    return redirect(url_for('doctor'))
+@app.route('/billing')
+def billing():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    bills = mongo.db.billing.find()
+    return render_template('billing.html', bills=bills)
+
+@app.route('/add_bill', methods=['GET', 'POST'])
+def add_bill():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        bill = {
+            'patient_id': request.form.get('patient_id'),
+            'patient_name': request.form.get('patient_name'),
+            'doctor_name': request.form.get('doctor_name'),
+            'service_date': request.form.get('service_date'),
+            'description': request.form.get('description'),
+            'amount': float(request.form.get('amount')),
+            'payment_status': request.form.get('payment_status'),
+            'payment_method': request.form.get('payment_method'),
+            'insurance_claim': request.form.get('insurance_claim'),
+            'created_at': datetime.now(),
+            'updated_at': datetime.now()
+        }
+        mongo.db.billing.insert_one(bill)
+        flash('Bill added successfully!', 'success')
+        return redirect(url_for('billing'))
+
+    patients = mongo.db.patients.find({}, {'_id': 1, 'name': 1})
+    doctors = mongo.db.doctors.find({}, {'_id': 1, 'name': 1})
+    return render_template('add_bill.html', patients=patients, doctors=doctors)
+
+@app.route('/edit_bill/<id>', methods=['GET', 'POST'])
+def edit_bill(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    bill = mongo.db.billing.find_one({'_id': ObjectId(id)})
+
+    if request.method == 'POST':
+        updated_bill = {
+            'patient_id': request.form.get('patient_id'),
+            'patient_name': request.form.get('patient_name'),
+            'doctor_name': request.form.get('doctor_name'),
+            'service_date': request.form.get('service_date'),
+            'description': request.form.get('description'),
+            'amount': float(request.form.get('amount')),
+            'payment_status': request.form.get('payment_status'),
+            'payment_method': request.form.get('payment_method'),
+            'insurance_claim': request.form.get('insurance_claim'),
+            'updated_at': datetime.now()
+        }
+        mongo.db.billing.update_one({'_id': ObjectId(id)}, {'$set': updated_bill})
+        flash('Bill updated successfully!', 'success')
+        return redirect(url_for('billing'))
+
+    patients = mongo.db.patients.find({}, {'_id': 1, 'name': 1})
+    doctors = mongo.db.doctors.find({}, {'_id': 1, 'name': 1})
+    return render_template('edit_bill.html', bill=bill, patients=patients, doctors=doctors)
+
+@app.route('/delete_bill/<id>')
+def delete_bill(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    mongo.db.billing.delete_one({'_id': ObjectId(id)})
+    flash('Bill deleted successfully!', 'success')
+    return redirect(url_for('billing'))
 
 if __name__ == '__main__':
     app.run(debug=True)
