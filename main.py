@@ -9,6 +9,7 @@ app.secret_key = "your_secret_key"
 
 # MongoDB configuration
 app.config["MONGO_URI"] = "mongodb://localhost:27017/hospital_management"
+app.config["MONGO_CONNECT_TIMEOUT_MS"] = 30000  # 30 seconds
 mongo = PyMongo(app)
 
 # Hardcoded credentials (unchanged)
@@ -91,7 +92,7 @@ def add_patient():
             'doctor_alloted': request.form.get('doctor_alloted'),
             'nursing_notes': request.form.get('nursing_notes'),
             'physician_notes': request.form.get('physician_notes'),
-            'follow_up_appointments': request.form.get('follow_up_appointments'),
+            'follow_up_appointment': request.form.get('follow_up_appointment'),
             'discharge_summary': request.form.get('discharge_summary'),
             'status': request.form.get('status'),
             'last_update': request.form.get('last_update'),
@@ -137,7 +138,7 @@ def edit_patient(id):
             'doctor_alloted': request.form.get('doctor_alloted'),
             'nursing_notes': request.form.get('nursing_notes'),
             'physician_notes': request.form.get('physician_notes'),
-            'follow_up_appointments': request.form.get('follow_up_appointments'),
+            'follow_up_appointment': request.form.get('follow_up_appointment'),
             'discharge_summary': request.form.get('discharge_summary'),
             'status': request.form.get('status'),
             'last_update': request.form.get('last_update'),
@@ -233,14 +234,19 @@ def delete_doctor(id):
     mongo.db.doctor.delete_one({'_id': ObjectId(id)})
     flash('Doctor deleted successfully!', 'success')
     return redirect(url_for('doctor'))
+
 @app.route('/billing')
 def billing():
     if 'user_id' not in session:
         flash('Please log in to access this page', 'error')
         return redirect(url_for('login'))
 
-    bills = mongo.db.billing.find()
-    return render_template('billing.html', bills=bills)
+    bills = mongo.db.bills.find()
+    paid_count = mongo.db.bills.count_documents({"status": "Paid"})
+    pending_count = mongo.db.bills.count_documents({"status": "Pending"})
+    total_count = mongo.db.bills.count_documents({})
+
+    return render_template('billing.html', bills=bills, paid_count=paid_count, pending_count=pending_count, total_count=total_count)
 
 @app.route('/add_bill', methods=['GET', 'POST'])
 def add_bill():
@@ -250,25 +256,20 @@ def add_bill():
 
     if request.method == 'POST':
         bill = {
-            'patient_id': request.form.get('patient_id'),
+            'bill_number': request.form.get('bill_number'),
             'patient_name': request.form.get('patient_name'),
-            'doctor_name': request.form.get('doctor_name'),
-            'service_date': request.form.get('service_date'),
-            'description': request.form.get('description'),
+            'date': request.form.get('date'),
             'amount': float(request.form.get('amount')),
-            'payment_status': request.form.get('payment_status'),
-            'payment_method': request.form.get('payment_method'),
-            'insurance_claim': request.form.get('insurance_claim'),
+            'status': request.form.get('status'),
+            'description': request.form.get('description'),
             'created_at': datetime.now(),
             'updated_at': datetime.now()
         }
-        mongo.db.billing.insert_one(bill)
+        mongo.db.bills.insert_one(bill)
         flash('Bill added successfully!', 'success')
         return redirect(url_for('billing'))
 
-    patients = mongo.db.patients.find({}, {'_id': 1, 'name': 1})
-    doctors = mongo.db.doctors.find({}, {'_id': 1, 'name': 1})
-    return render_template('add_bill.html', patients=patients, doctors=doctors)
+    return render_template('add_bill.html')
 
 @app.route('/edit_bill/<id>', methods=['GET', 'POST'])
 def edit_bill(id):
@@ -276,28 +277,23 @@ def edit_bill(id):
         flash('Please log in to access this page', 'error')
         return redirect(url_for('login'))
 
-    bill = mongo.db.billing.find_one({'_id': ObjectId(id)})
+    bill = mongo.db.bills.find_one({'_id': ObjectId(id)})
 
     if request.method == 'POST':
         updated_bill = {
-            'patient_id': request.form.get('patient_id'),
+            'bill_number': request.form.get('bill_number'),
             'patient_name': request.form.get('patient_name'),
-            'doctor_name': request.form.get('doctor_name'),
-            'service_date': request.form.get('service_date'),
-            'description': request.form.get('description'),
+            'date': request.form.get('date'),
             'amount': float(request.form.get('amount')),
-            'payment_status': request.form.get('payment_status'),
-            'payment_method': request.form.get('payment_method'),
-            'insurance_claim': request.form.get('insurance_claim'),
+            'status': request.form.get('status'),
+            'description': request.form.get('description'),
             'updated_at': datetime.now()
         }
-        mongo.db.billing.update_one({'_id': ObjectId(id)}, {'$set': updated_bill})
+        mongo.db.bills.update_one({'_id': ObjectId(id)}, {'$set': updated_bill})
         flash('Bill updated successfully!', 'success')
         return redirect(url_for('billing'))
 
-    patients = mongo.db.patients.find({}, {'_id': 1, 'name': 1})
-    doctors = mongo.db.doctors.find({}, {'_id': 1, 'name': 1})
-    return render_template('edit_bill.html', bill=bill, patients=patients, doctors=doctors)
+    return render_template('edit_bill.html', bill=bill)
 
 @app.route('/delete_bill/<id>')
 def delete_bill(id):
@@ -305,9 +301,110 @@ def delete_bill(id):
         flash('Please log in to access this page', 'error')
         return redirect(url_for('login'))
 
-    mongo.db.billing.delete_one({'_id': ObjectId(id)})
+    mongo.db.bills.delete_one({'_id': ObjectId(id)})
     flash('Bill deleted successfully!', 'success')
     return redirect(url_for('billing'))
 
+@app.route('/search_bill', methods=['POST'])
+def search_bill():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    bill_number = request.form.get('bill_number')
+    bill = mongo.db.bills.find_one({'bill_number': bill_number})
+
+    if bill:
+        return render_template('billing.html', bills=[bill], show_all_link=True)
+    else:
+        flash('Bill not found', 'error')
+        return redirect(url_for('billing'))
+
+@app.route('/appointment')
+def appointment():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    appointment = mongo.db.appointment.find()
+    scheduled_count = mongo.db.appointment.count_documents({"status": "Scheduled"})
+    completed_count = mongo.db.appointment.count_documents({"status": "Completed"})
+    total_count = mongo.db.appointment.count_documents({})
+
+    return render_template('appointment.html', appointment=appointment, scheduled_count=scheduled_count, completed_count=completed_count, total_count=total_count)
+
+@app.route('/add_appointment', methods=['GET', 'POST'])
+def add_appointment():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        appointment = {
+            'appointment_id': request.form.get('appointment_id'),
+            'patient_name': request.form.get('patient_name'),
+            'doctor_name': request.form.get('doctor_name'),
+            'date': request.form.get('date'),
+            'time': request.form.get('time'),
+            'status': request.form.get('status'),
+            'notes': request.form.get('notes'),
+            'created_at': datetime.now(),
+            'updated_at': datetime.now()
+        }
+        mongo.db.appointment.insert_one(appointment)
+        flash('Appointment added successfully!', 'success')
+        return redirect(url_for('appointment'))
+
+    return render_template('add_appointment.html')
+
+@app.route('/edit_appointment/<id>', methods=['GET', 'POST'])
+def edit_appointment(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    appointment = mongo.db.appointment.find_one({'_id': ObjectId(id)})
+
+    if request.method == 'POST':
+        updated_appointment = {
+            'appointment_id': request.form.get('appointment_id'),
+            'patient_name': request.form.get('patient_name'),
+            'doctor_name': request.form.get('doctor_name'),
+            'date': request.form.get('date'),
+            'time': request.form.get('time'),
+            'status': request.form.get('status'),
+            'notes': request.form.get('notes'),
+            'updated_at': datetime.now()
+        }
+        mongo.db.appointment.update_one({'_id': ObjectId(id)}, {'$set': updated_appointment})
+        flash('Appointment updated successfully!', 'success')
+        return redirect(url_for('appointment'))
+
+    return render_template('edit_appointment.html', appointment=appointment)
+
+@app.route('/delete_appointment/<id>')
+def delete_appointment(id):
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    mongo.db.appointment.delete_one({'_id': ObjectId(id)})
+    flash('Appointment deleted successfully!', 'success')
+    return redirect(url_for('appointment'))
+
+@app.route('/search_appointment', methods=['POST'])
+def search_appointment():
+    if 'user_id' not in session:
+        flash('Please log in to access this page', 'error')
+        return redirect(url_for('login'))
+
+    appointment_id = request.form.get('appointment_id')
+    appointment = mongo.db.appointment.find_one({'appointment_id': appointment_id})
+
+    if appointment:
+        return render_template('appointment.html', appointment=[appointment], show_all_link=True)
+    else:
+        flash('Appointment not found', 'error')
+        return redirect(url_for('appointments'))
 if __name__ == '__main__':
     app.run(debug=True)
