@@ -53,7 +53,7 @@ def dashboard():
     
     return render_template('home.html')
 
-# Patients page (unchanged)
+
 @app.route('/patients')
 def patients():
     if 'user_id' not in session:
@@ -107,7 +107,7 @@ def add_patient():
 
     return render_template('add_patient.html')
 
-# Updated edit_patient route (unchanged)
+
 @app.route('/edit_patient/<id>', methods=['GET', 'POST'])
 def edit_patient(id):
     if 'user_id' not in session:
@@ -406,5 +406,6 @@ def search_appointment():
     else:
         flash('Appointment not found', 'error')
         return redirect(url_for('appointments'))
+        
 if __name__ == '__main__':
     app.run(debug=True)
